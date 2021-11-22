@@ -30,7 +30,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-  riverpod: ^1.0.0
   animations: ^2.0.2
   animated_rotation: ^2.0.0
 

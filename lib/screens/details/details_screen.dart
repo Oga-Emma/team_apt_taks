@@ -19,9 +19,15 @@ class _DetailsScreenState extends State<DetailsScreen>
 
   late AnimationController translationA;
   late AnimationController translationB;
+  late AnimationController translationC;
+  late AnimationController translationD;
+  late AnimationController translationE;
 
   late Animation translateAnimationA;
   late Animation translateAnimationB;
+  late Animation translateAnimationC;
+  late Animation translateAnimationD;
+  late Animation translateAnimationE;
   @override
   void initState() {
     _controllerA = AnimationController(
@@ -29,32 +35,52 @@ class _DetailsScreenState extends State<DetailsScreen>
       ..forward();
 
     translationA = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500))
-      ..forward();
-
-    translationB = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500))
-      ..forward();
+        vsync: this, duration: const Duration(milliseconds: 500));
 
     translateAnimationA = Tween<double>(
       begin: 20,
       end: 0,
     ).animate(translationA);
-    translationA.forward();
 
-    translationB =
-        AnimationController(vsync: this, duration: const Duration(seconds: 3));
+    translationB = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 500));
     translateAnimationB = Tween<double>(
-      begin: 10,
+      begin: 50,
       end: 0,
     ).animate(translationB);
 
-    _fadeAnimation =
-        AnimationController(vsync: this, duration: const Duration(seconds: 2));
-    _fadeInFadeOut = Tween<double>(begin: 0.0, end: 1).animate(_fadeAnimation);
+    translationC = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 500));
+    translateAnimationC = Tween<double>(
+      begin: 40,
+      end: 0,
+    ).animate(translationC);
 
+    translationD = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 500));
+    translateAnimationD = Tween<double>(
+      begin: 30,
+      end: 0,
+    ).animate(translationD);
+
+    translationE = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 500));
+    translateAnimationE = Tween<double>(
+      begin: 50,
+      end: 0,
+    ).animate(translationE);
+
+    _fadeAnimation =
+        AnimationController(vsync: this, duration: const Duration(seconds: 1));
+    _fadeInFadeOut =
+        Tween<double>(begin: 0.0, end: 1.0).animate(_fadeAnimation);
+
+    translationA.forward();
     translationB.forward();
-    _fadeAnimation.forward(); //.whenComplete(() => setState(() {}));
+    translationC.forward();
+    translationD.forward();
+    translationE.forward();
+    _fadeAnimation.forward().whenComplete(() => setState(() {}));
     super.initState();
   }
 
@@ -68,9 +94,9 @@ class _DetailsScreenState extends State<DetailsScreen>
     translationA.dispose();
     translationB.dispose();
     _fadeAnimation.dispose();
-    // translationC.dispose();
-    // translationD.dispose();
-    // translationE.dispose();
+    translationC.dispose();
+    translationD.dispose();
+    translationE.dispose();
     super.dispose();
   }
 
@@ -139,7 +165,7 @@ class _DetailsScreenState extends State<DetailsScreen>
                   ],
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               FadeTransition(
                 opacity: _fadeInFadeOut,
                 child: Column(
@@ -147,7 +173,7 @@ class _DetailsScreenState extends State<DetailsScreen>
                     Padding(
                       padding: const EdgeInsets.all(24.0),
                       child: translate(
-                        animation: translateAnimationA,
+                        animation: translateAnimationB,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
@@ -174,9 +200,9 @@ class _DetailsScreenState extends State<DetailsScreen>
                         ),
                       ),
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     translate(
-                        animation: translateAnimationB,
+                        animation: translateAnimationC,
                         child: SelectStyleArea(shoe: widget.shoe)),
                     // SizedBox(height: 4),
                     body(),
@@ -196,25 +222,33 @@ class _DetailsScreenState extends State<DetailsScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 8),
           translate(
-            animation: translateAnimationB,
-            child: const Text("Select Size",
-                style: TextStyle(fontWeight: FontWeight.bold)),
+            animation: translateAnimationD,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                SizedBox(height: 8),
+                Text("Select Size",
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                SizedBox(height: 24),
+                SelectSizeArea(),
+                SizedBox(height: 24),
+              ],
+            ),
           ),
-          SizedBox(height: 8),
           translate(
-              animation: translateAnimationB, child: const SelectSizeArea()),
-          MaterialButton(
-            color: Colors.black,
-            height: 50,
-            minWidth: double.maxFinite,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.0)),
-            onPressed: () {},
-            child: const Text(
-              "Add to Bag",
-              style: TextStyle(color: Colors.white),
+            animation: translateAnimationE,
+            child: MaterialButton(
+              color: Colors.black,
+              height: 50,
+              minWidth: double.maxFinite,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.0)),
+              onPressed: () {},
+              child: const Text(
+                "Add to Bag",
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ),
         ],
@@ -223,10 +257,15 @@ class _DetailsScreenState extends State<DetailsScreen>
   }
 
   Widget translate({required Widget child, required Animation animation}) {
-    return Transform.translate(
-      offset: Offset(0.0, animation.value),
-      child: child,
-    );
+    // return child;
+    return AnimatedBuilder(
+        animation: animation,
+        builder: (context, widget) {
+          return Transform.translate(
+            offset: Offset(0.0, animation.value),
+            child: child,
+          );
+        });
   }
 }
 
